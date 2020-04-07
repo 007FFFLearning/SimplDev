@@ -26,25 +26,6 @@ jobs:
       testResultsFormat: VSTest
       testResultsFiles: '**/*.trx' 
 
-- job: macOS
-  pool:
-    vmImage: 'macOS-10.13'
-  steps:
-  - task: DotNetCoreInstaller@0
-    inputs:
-      packageType: 'sdk'
-      version: '2.2.401'
-  - script: dotnet build ./SimplCommerce.sln
-    displayName: 'dotnet build'
-  - script: ./run-tests.sh
-    displayName: 'run tests'
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results **/*.trx'
-    condition: succeededOrFailed()
-    inputs:
-      testResultsFormat: VSTest
-      testResultsFiles: '**/*.trx' 
-
 - job: Windows
   pool:
     vmImage: 'windows-2019'
@@ -59,27 +40,6 @@ jobs:
     inputs:
       filePath: .\run-tests.ps1
     displayName: 'run tests'
-  - task: PublishTestResults@2
-    displayName: 'Publish Test Results **/*.trx'
-    condition: succeededOrFailed()
-    inputs:
-      testResultsFormat: VSTest
-      testResultsFiles: '**/*.trx' 
-
-- job: LinuxRelease
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  variables:
-    buildConfiguration: 'Release'
-  steps:
-  - task: DotNetCoreInstaller@0
-    inputs:
-      packageType: 'sdk'
-      version: '2.2.401'
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: 'dotnet build $(buildConfiguration)'
-  - script: ./run-tests.sh
-    displayName: 'run tests'    
   - task: PublishTestResults@2
     displayName: 'Publish Test Results **/*.trx'
     condition: succeededOrFailed()
